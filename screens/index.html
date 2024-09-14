@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CinemaSpot</title>
+    <link rel="stylesheet" href="../styles/index.css">
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+</head>
+
+<body>
+    <h1 class="page-title">Welcome to CinemaSpot
+        <p class="tagline">Bringing You Closer to the Movies You Love,</p>
+        <p class="tagline">One Perfect Show at a Time.</p>
+    </h1>
+    <div class="wrapper">
+        <!-- Log In Form -->
+        <div class="form-container active" id="login-form">
+            <form action="#">
+                <h2>Log In</h2>
+                <div class="input-field">
+                    <input type="text" id="login-email" required>
+                    <label>Enter your email</label>
+                </div>
+                <div class="input-field">
+                    <input type="password" id="login-password" required>
+                    <label>Enter your password</label>
+                </div>
+                <div class="forget">
+                    <label for="remember">
+                        <input type="checkbox" id="remember">
+                        <p>Remember me</p>
+                    </label>
+                    <a href="#" id="show-forgot">Forgot password?</a>
+                </div>
+                <button type="submit">Log In</button>
+                <p style="color: white; margin-bottom: 8px;">Or</p>
+                <button type="button" id="google-login">Login with Google</button>
+                <div class="register">
+                    <p>Don't have an account? <a href="#" id="show-signup">Register</a></p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sign Up Form -->
+        <div class="form-container" id="signup-form" style="display:none;">
+            <form action="#">
+                <h2>Sign Up</h2>
+                <div class="input-field">
+                    <input type="text" id="signup-email" required>
+                    <label>Enter your email</label>
+                </div>
+                <div class="input-field">
+                    <input type="password" id="signup-password" required>
+                    <label>Create your password</label>
+                </div>
+                <div class="input-field">
+                    <input type="password" id="signup-confirm-password" required>
+                    <label>Confirm your password</label>
+                </div>
+                <button type="submit">Sign Up</button>
+                <p style="color: white; margin-bottom: 8px;">Or</p>
+                <button type="button" id="google-signin">Signup with Google</button>
+                <div class="register">
+                    <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Forgot Password Form -->
+        <div class="form-container" id="forgot-password-form" style="display:none;">
+            <form id="forgot-password">
+                <h2>Forgot Password</h2>
+                <div class="input-field">
+                    <input type="email" id="forgot-password-email" required>
+                    <label>Enter your email</label>
+                </div>
+                <button type="submit">Submit</button>
+                <div class="register">
+                    <p>Remembered your password? <a href="#" id="show-login-from-forgot">Login</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="../scripts/app.js"></script>
+</body>
+
+</html>

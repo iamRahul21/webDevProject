@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/booking.css">
+    <title>CinemaSpot</title>
+</head>
+
+<body>
+    <div class="container">
+        <img src="" alt="${movie.title}" style="max-width: 100%; height: auto; width: 38%;">
+        <div class="movie-booking">
+            <h3 style="color: white; font-weight: 100; padding-bottom: 30px;">Date</h3>
+            <div id="date" style="color: white; margin-top: 10px;">
+                <span id="date-span">21</span>
+                <span id="date-span">22</span>
+                <span id="date-span">23</span>
+                <span id="date-span">24</span>
+                <span id="date-span">25</span>
+                <span id="date-span">26</span>
+                <span id="date-span">27</span>
+            </div>
+            <hr style="margin-top: 35px;">
+            <h3 style="color: white; font-weight: 100; padding-bottom: 30px; padding-top: 30px;">Time</h3>
+            <div id="date" style="color: white; margin-top: 10px;">
+                <span id="time-span">13:15</span>
+                <span id="time-span">15:15</span>
+                <span id="time-span">18:15</span>
+                <span id="time-span">20:30</span>
+                <span id="time-span">22:30</span>
+            </div>
+            <hr style="margin-top: 35px; background: #000;">
+            <div class="seat-map">
+                <div class="seats">
+                    <!-- Row G -->
+                    <div class="row">
+                        <div class="seat blank">G</div>
+                        <div class="seat blank"></div>
+                        <div class="seat blank"></div>
+                        <div class="seat booked"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat blank"></div>
+                        <div class="seat blank"></div>
+                        <div class="seat blank">G</div>
+                    </div>
+                    <!-- Row F -->
+                    <div class="row">
+                        <div class="seat blank">F</div>
+                        <div class="seat blank"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat blank"></div>
+                        <div class="seat blank">F</div>
+                    </div>
+                    <!-- Row E... -->
+                    <div class="row">
+                        <div class="seat blank">E</div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat blank">E</div>
+                    </div>
+                    <!-- Row D... -->
+                    <div class="row">
+                        <div class="seat blank">D</div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat booked"></div>
+                        <div class="seat booked"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat booked"></div>
+                        <div class="seat blank">D</div>
+                    </div>
+                    <!-- Row C... -->
+                    <div class="row">
+                        <div class="seat blank">C</div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat booked"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat blank">C</div>
+                    </div>
+                    <!-- Row B... -->
+                    <div class="row">
+                        <div class="seat blank">B</div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat blank">B</div>
+                    </div>
+                    <!-- Row A... -->
+                    <div class="row">
+                        <div class="seat blank">A</div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat booked"></div>
+                        <div class="seat booked"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat available"></div>
+                        <div class="seat blank">A</div>
+                    </div>
+                </div>
+            </div>
+            <div class="legend">
+                <span class="legend-item available"></span> Available
+                <span class="legend-item booked"></span> Booked
+                <span class="legend-item selected"></span> Selected
+            </div>
+            <hr style="margin-top: 35px; background: #000;">
+            <button id="checkout">Checkout</button>
+        </div>
+    </div>
+
+    <!-- Checkout Card -->
+    <div id="checkout-card" style="display: none;">
+        <button class="close-button" id="closeCheckoutButton">&times;</button>
+        <h3>SELECTED SEATS</h3>
+        <div id="selected-seats">
+            <!-- Seats will be dynamically populated here -->
+        </div>
+        <button id="purchase">Purchase</button>
+        <div id="time-left">Time left to purchase:</div>
+    </div>
+
+    <!-- Order Form -->
+    <div class="order-form-container" id="orderFormContainer" style="display:none;">
+        <div class="order-form" style="width: 600px;">
+            <button class="close-button" id="closeButton">&times;</button>
+            <h2 style="margin-top: 20px; margin-bottom: 0;">ORDER</h2>
+            <form id="orderForm" style="padding: 30px;">
+                <label for="name">Name and surname</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+                <label for="promo">Promo</label>
+                <div class="promo-field">
+                    <input type="text" id="promo" name="promo" placeholder="Enter promo code">
+                    <button type="button" id="applyPromo">Apply</button>
+                </div>
+
+                <label for="phone">Cell.phone</label>
+                <div class="phone-field">
+                    <select id="countryCode" name="countryCode">
+                        <option value="+91">+91</option>
+                    </select>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter phone number" required>
+                </div>
+
+                <label for="payment">Payment</label>
+                <select id="payment" name="payment" required>
+                    <option value="visa">Visa bank card</option>
+                    <option value="mastercard">MasterCard</option>
+                </select>
+
+                <label for="card">Card Number</label>
+                <input type="text" id="card" name="card" placeholder="Enter card number" required>
+
+                <div class="remember">
+                    <input type="checkbox" id="rememberCard" name="rememberCard">
+                    <label for="rememberCard">Remember card information</label>
+                </div>
+
+                <button type="submit" class="purchase-button">Purchase (48$)</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="/scripts/booking.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,6 @@
+node_modules/
+.env
+firebase-config.js
+assets/cinemaspot-c3626-firebase-adminsdk-3ftsc-27bf794f80.json
+demo.js
+CinemaSpot README.md.pdf
