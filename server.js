@@ -7,14 +7,12 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 
-// Import models
 import Movie from './models/Movie.js';
 import Theatre from './models/Theatre.js';
 import Showtime from './models/Showtime.js';
 import Reservation from './models/Reservation.js';
 import User from './models/User.js';
 
-// Initialize dotenv
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
