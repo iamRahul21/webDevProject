@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         usersSection.style.display = 'none';
     }
 
+    loadSimplifiedMovies();
     hideAllSections();
 
     manageMoviesBtn.addEventListener('click', () => {
@@ -63,13 +64,14 @@ document.addEventListener('DOMContentLoaded', () => {
         usersSection.style.display = 'block';
         heading.style.display = 'none';
         movieList.style.display = 'none';
-        loadReservations();
+        loadUsers();
     });
 
     homeBtn.addEventListener('click', () => {
         hideAllSections();
         heading.style.display = 'block';
         movieList.style.display = 'flex';
+        loadSimplifiedMovies();
     });
 
     // Add Movie
@@ -98,12 +100,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 cover: `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`,
                 language: movie.original_language,
                 genre: movie.genre_ids.join(', '),
-                director: movie.director || '', 
-                trailer: movie.trailer || '', 
-                duration: movie.duration || '', 
+                director: '',
+                trailer: '',
+                duration: '',
                 startDate,
                 endDate
-            };            
+            };
 
             // Send movie data to the server
             const serverResponse = await fetch('http://localhost:3000/api/movies', {
@@ -116,8 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (serverResponse.ok) {
                 alert('Movie added successfully!');
-                loadMovies(); // Refresh the movie list
-                document.getElementById('movie-form').reset(); // Reset form fields
+                loadMovies();
+                document.getElementById('movie-form').reset();
             } else {
                 const errorData = await serverResponse.json();
                 alert(`Error adding movie: ${errorData.message}`);
@@ -130,70 +132,74 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load Movies
     async function loadMovies() {
-        const response = await fetch('http://localhost:3000/api/movies');
-        const movies = await response.json();
-        const moviesList = document.getElementById('movies-list');
-        moviesList.innerHTML = '';
+        try {
+            const response = await fetch('http://localhost:3000/api/movies');
+            const movies = await response.json();
+            const moviesList = document.getElementById('movies-list');
+            moviesList.innerHTML = '';
 
-        movies.forEach(movie => {
-            const movieItem = document.createElement('div');
-            movieItem.classList.add('col-md-4', 'mb-4');
-            movieItem.innerHTML = `
-                <div class="card shadow-sm">
-                    <img src="${movie.cover}" class="card-img-top" alt="${movie.title}" style="max-height: 300px;">
-                    <div class="card-body">
-                        <h5 class="card-title">${movie.title}</h5>
-                        <div class="description-container">
-                            <p class="card-text short-description">${movie.description.substring(0, 100)}...</p>
-                            <p class="card-text full-description d-none">${movie.description}</p>
-                            <a href="#" class="btn btn-link show-more">Show More</a>
+            movies.forEach(movie => {
+                const movieItem = document.createElement('div');
+                movieItem.classList.add('col-md-4', 'mb-4');
+                movieItem.innerHTML = `
+                    <div class="card shadow-sm">
+                        <img src="${movie.cover}" class="card-img-top" alt="${movie.title}" style="max-height: 300px;">
+                        <div class="card-body">
+                            <h5 class="card-title">${movie.title}</h5>
+                            <div class="description-container">
+                                <p class="card-text short-description">${movie.description.substring(0, 100)}...</p>
+                                <p class="card-text full-description d-none">${movie.description}</p>
+                                <a href="#" class="btn btn-link show-more">Show More</a>
+                            </div>
+                            <p class="card-text"><strong>Language:</strong> ${movie.language}</p>
+                            <p class="card-text"><strong>Genre:</strong> ${movie.genre}</p>
+                            <p class="card-text"><strong>Director:</strong> ${movie.director}</p>
+                            <p class="card-text"><strong>Duration:</strong> ${movie.duration} min</p>
+                            <p class="card-text"><strong>Start Date:</strong> ${new Date(movie.startDate).toLocaleDateString()}</p>
+                            <p class="card-text"><strong>End Date:</strong> ${new Date(movie.endDate).toLocaleDateString()}</p>
+                            <p class="card-text"><strong>Trailer:</strong> <a href="${movie.trailer}" target="_blank">Watch Trailer</a></p>
+                            <button data-id="${movie._id}" class="btn btn-danger btn-sm delete-movie">Delete</button>
                         </div>
-                        <p class="card-text"><strong>Language:</strong> ${movie.language}</p>
-                        <p class="card-text"><strong>Genre:</strong> ${movie.genre}</p>
-                        <p class="card-text"><strong>Director:</strong> ${movie.director}</p>
-                        <p class="card-text"><strong>Duration:</strong> ${movie.duration} min</p>
-                        <p class="card-text"><strong>Start Date:</strong> ${new Date(movie.startDate).toLocaleDateString()}</p>
-                        <p class="card-text"><strong>End Date:</strong> ${new Date(movie.endDate).toLocaleDateString()}</p>
-                        <p class="card-text"><strong>Trailer:</strong> <a href="${movie.trailer}" target="_blank">Watch Trailer</a></p>
-                        <button data-id="${movie._id}" class="btn btn-danger btn-sm delete-movie">Delete</button>
                     </div>
-                </div>
-            `;
-            moviesList.appendChild(movieItem);
-        });
+                `;
+                moviesList.appendChild(movieItem);
+            });
 
-        document.addEventListener('click', function (event) {
-            if (event.target && event.target.matches('.show-more')) {
-                event.preventDefault();
-                const container = event.target.closest('.description-container');
-                const shortDesc = container.querySelector('.short-description');
-                const fullDesc = container.querySelector('.full-description');
+            document.addEventListener('click', function (event) {
+                if (event.target && event.target.matches('.show-more')) {
+                    event.preventDefault();
+                    const container = event.target.closest('.description-container');
+                    const shortDesc = container.querySelector('.short-description');
+                    const fullDesc = container.querySelector('.full-description');
 
-                if (event.target.textContent === 'Show More') {
-                    shortDesc.classList.add('d-none');
-                    fullDesc.classList.remove('d-none');
-                    event.target.textContent = 'Show Less';
-                } else {
-                    shortDesc.classList.remove('d-none');
-                    fullDesc.classList.add('d-none');
-                    event.target.textContent = 'Show More';
-                }
-            }
-        });
-
-        document.querySelectorAll('.delete-movie').forEach(button => {
-            button.addEventListener('click', async (e) => {
-                const movieId = e.target.getAttribute('data-id');
-                const response = await fetch(`http://localhost:3000/api/movies/${movieId}`, {
-                    method: 'DELETE'
-                });
-                if (response.ok) {
-                    loadMovies();
-                } else {
-                    alert('Failed to delete movie.');
+                    if (event.target.textContent === 'Show More') {
+                        shortDesc.classList.add('d-none');
+                        fullDesc.classList.remove('d-none');
+                        event.target.textContent = 'Show Less';
+                    } else {
+                        shortDesc.classList.remove('d-none');
+                        fullDesc.classList.add('d-none');
+                        event.target.textContent = 'Show More';
+                    }
                 }
             });
-        });
+
+            document.querySelectorAll('.delete-movie').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const movieId = e.target.getAttribute('data-id');
+                    const response = await fetch(`http://localhost:3000/api/movies/${movieId}`, {
+                        method: 'DELETE'
+                    });
+                    if (response.ok) {
+                        loadMovies();
+                    } else {
+                        alert('Failed to delete movie.');
+                    }
+                });
+            });
+        } catch (error) {
+            console.error('Error loading movies:', error);
+        }
     }
 
     // Load Simplified Movies for Display Section
@@ -202,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('http://localhost:3000/api/movies');
             const movies = await response.json();
             const moviesContainer = document.getElementById('movies-container');
-            moviesContainer.innerHTML = ''; // Clear previous content
+            moviesContainer.innerHTML = '';
 
             movies.forEach(movie => {
                 const movieItem = document.createElement('div');
@@ -212,16 +218,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     <img src="${movie.cover}" class="card-img-top" alt="${movie.title}" style="max-height: 300px;">
                     <div class="card-body">
                         <h5 class="card-title">${movie.title}</h5>
+                        <p class="card-text"><strong>Language:</strong> ${movie.language}</p>
+                        <p class="card-text"><strong>Genre:</strong> ${movie.genre}</p>
                     </div>
                 </div>
-            `;
+                `;
                 moviesContainer.appendChild(movieItem);
             });
         } catch (error) {
             console.error('Error loading simplified movies:', error);
         }
     }
-    loadSimplifiedMovies();
 
     // Add Theatre
     document.getElementById('theatre-form').addEventListener('submit', async (e) => {
@@ -232,168 +239,208 @@ document.addEventListener('DOMContentLoaded', () => {
         const ticketPrice = document.getElementById('theatre-ticket-price').value;
         const seats = document.getElementById('theatre-seats').value;
 
-        const theatreData = {
-            name,
-            city,
-            ticketPrice,
-            seats
-        };
-
         try {
             const response = await fetch('http://localhost:3000/api/theatres', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(theatreData)
+                body: JSON.stringify({ name, city, ticketPrice, seats })
             });
 
             if (response.ok) {
+                alert('Theatre added successfully!');
                 loadTheatres();
+                document.getElementById('theatre-form').reset();
             } else {
-                alert('Failed to add theatre.');
+                const errorData = await response.json();
+                alert(`Error adding theatre: ${errorData.message}`);
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred while adding the theatre.');
+            alert('Error adding theatre. Please try again.');
         }
     });
 
     // Load Theatres
     async function loadTheatres() {
-        const response = await fetch('http://localhost:3000/api/theatres');
-        const theatres = await response.json();
-        const theatresList = document.getElementById('theatres-list');
-        theatresList.innerHTML = '';
+        try {
+            const response = await fetch('http://localhost:3000/api/theatres');
+            const theatres = await response.json();
+            const theatresList = document.getElementById('theatres-list');
+            theatresList.innerHTML = '';
 
-        theatres.forEach(theatre => {
-            const theatreItem = document.createElement('div');
-            theatreItem.classList.add('theatre-item', 'p-3', 'mb-3', 'bg-white', 'shadow-sm', 'rounded');
-            theatreItem.innerHTML = `
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <h3 class="mb-0">${theatre.name}</h3>
-                <button data-id="${theatre._id}" class="btn btn-danger btn-sm delete-theatre">Delete</button>
-            </div>
-            <p class="mb-1"><strong>City:</strong> ${theatre.city}</p>
-            <p class="mb-1"><strong>Ticket Price:</strong> ₹${theatre.ticketPrice}</p>
-            <p class="mb-0"><strong>Seats:</strong> ${theatre.seats}</p>
-        `;
-            theatresList.appendChild(theatreItem);
-        });
-
-        document.querySelectorAll('.delete-theatre').forEach(button => {
-            button.addEventListener('click', async (e) => {
-                const theatreId = e.target.getAttribute('data-id');
-                const response = await fetch(`http://localhost:3000/api/theatres/${theatreId}`, {
-                    method: 'DELETE'
-                });
-                if (response.ok) {
-                    loadTheatres();
-                } else {
-                    alert('Failed to delete theatre.');
-                }
+            theatres.forEach(theatre => {
+                const theatreItem = document.createElement('div');
+                theatreItem.classList.add('col-md-4', 'mb-4');
+                theatreItem.innerHTML = `
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <p class="card-text"><strong>Name:</strong> ${theatre.name}</p>
+                        <p class="card-text"><strong>Location:</strong> ${theatre.city}</p>
+                        <p class="card-text"><strong>Capacity:</strong> ${theatre.seats}</p>
+                        <p class="card-text"><strong>Ticket Price: ₹</strong> ${theatre.ticketPrice}</p>
+                    </div>
+                </div>
+            `;
+                theatresList.appendChild(theatreItem);
             });
-        });
+        } catch (error) {
+            console.error('Error loading theatres:', error);
+        }
     }
 
     // Add Showtime
     document.getElementById('showtime-form').addEventListener('submit', async (e) => {
         e.preventDefault();
+
         const movieId = document.getElementById('showtime-movie').value;
         const theatreId = document.getElementById('showtime-theatre').value;
-        const time = document.getElementById('showtime-time').value;
+        const startTime = document.getElementById('showtime-time').value;
 
-        const response = await fetch('http://localhost:3000/api/showtimes', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ movieId, theatreId, time })
-        });
+        const endTime = new Date(startTime);
+        endTime.setHours(endTime.getHours() + 2); 
 
-        if (response.ok) {
-            loadShowtimes();
-        } else {
-            alert('Failed to add showtime.');
+        try {
+            const response = await fetch('http://localhost:3000/api/showtimes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ movieId, theatreId, startTime, endTime: endTime.toISOString() })
+            });
+
+            if (response.ok) {
+                alert('Showtime added successfully!');
+                loadShowtimes();
+                document.getElementById('showtime-form').reset();
+            } else {
+                const errorData = await response.json();
+                alert(`Error adding showtime: ${errorData.message}`);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error adding showtime. Please try again.');
         }
     });
 
     // Load Showtimes
     async function loadShowtimes() {
-        const moviesResponse = await fetch('http://localhost:3000/api/movies');
-        const movies = await moviesResponse.json();
-        const theatresResponse = await fetch('http://localhost:3000/api/theatres');
-        const theatres = await theatresResponse.json();
-        const showtimesResponse = await fetch('http://localhost:3000/api/showtimes');
-        const showtimes = await showtimesResponse.json();
+        try {
+            const response = await fetch('http://localhost:3000/api/showtimes');
+            const showtimes = await response.json();
+            const showtimesList = document.getElementById('showtimes-list');
+            showtimesList.innerHTML = '';
 
-        const showtimeMovieSelect = document.getElementById('showtime-movie');
-        const showtimeTheatreSelect = document.getElementById('showtime-theatre');
-        const showtimesList = document.getElementById('showtimes-list');
-
-        showtimeMovieSelect.innerHTML = '';
-        showtimeTheatreSelect.innerHTML = '';
-        showtimesList.innerHTML = '';
-
-        movies.forEach(movie => {
-            const option = document.createElement('option');
-            option.value = movie._id;
-            option.textContent = movie.title;
-            showtimeMovieSelect.appendChild(option);
-        });
-
-        theatres.forEach(theatre => {
-            const option = document.createElement('option');
-            option.value = theatre._id;
-            option.textContent = theatre.name;
-            showtimeTheatreSelect.appendChild(option);
-        });
-
-        showtimes.forEach(showtime => {
-            const showtimeItem = document.createElement('div');
-            showtimeItem.classList.add('showtime-item');
-            showtimeItem.innerHTML = `
-                <h3>${showtime.movie.title}</h3>
-                <p>Theatre: ${showtime.theatre.name}</p>
-                <p>Time: ${new Date(showtime.time).toLocaleString()}</p>
-                <button data-id="${showtime._id}" class="delete-showtime">Delete</button>
+            showtimes.forEach(showtime => {
+                const showtimeItem = document.createElement('div');
+                showtimeItem.classList.add('col-md-4', 'mb-4');
+                showtimeItem.innerHTML = `
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <p class="card-text"><strong>Movie:</strong> ${showtime.movieTitle}</p>
+                        <p class="card-text"><strong>Theatre:</strong> ${showtime.theatreName}</p>
+                        <p class="card-text"><strong>Start Time:</strong> ${new Date(showtime.startTime).toLocaleString()}</p>
+                        <p class="card-text"><strong>End Time:</strong> ${new Date(showtime.endTime).toLocaleString()}</p>
+                    </div>
+                </div>
             `;
-            showtimesList.appendChild(showtimeItem);
-        });
-
-        document.querySelectorAll('.delete-showtime').forEach(button => {
-            button.addEventListener('click', async (e) => {
-                const showtimeId = e.target.getAttribute('data-id');
-                const response = await fetch(`http://localhost:3000/api/showtimes/${showtimeId}`, {
-                    method: 'DELETE'
-                });
-                if (response.ok) {
-                    loadShowtimes();
-                } else {
-                    alert('Failed to delete showtime.');
-                }
+                showtimesList.appendChild(showtimeItem);
             });
-        });
+        } catch (error) {
+            console.error('Error loading showtimes:', error);
+        }
     }
 
     // Load Reservations
     async function loadReservations() {
-        const response = await fetch('http://localhost:3000/api/reservations');
-        const reservations = await response.json();
-        const reservationsList = document.getElementById('reservations-list');
-        reservationsList.innerHTML = '';
+        try {
+            const response = await fetch('http://localhost:3000/api/reservations');
+            const reservations = await response.json();
+            const reservationsList = document.getElementById('reservations-list');
+            reservationsList.innerHTML = '';
 
-        reservations.forEach(reservation => {
-            const reservationItem = document.createElement('div');
-            reservationItem.classList.add('reservation-item');
-            reservationItem.innerHTML = `
-                <h3>${reservation.movie.title}</h3>
-                <p>Theatre: ${reservation.theatre.name}</p>
-                <p>Showtime: ${new Date(reservation.showtime.time).toLocaleString()}</p>
-                <p>User: ${reservation.user.email}</p>
-                <p>Seats: ${reservation.seats.join(', ')}</p>
+            reservations.forEach(reservation => {
+                const reservationItem = document.createElement('div');
+                reservationItem.classList.add('col-md-4', 'mb-4');
+                reservationItem.innerHTML = `
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <p class="card-text"><strong>User:</strong> ${reservation.userEmail}</p>
+                        <p class="card-text"><strong>Movie:</strong> ${reservation.movieTitle}</p>
+                        <p class="card-text"><strong>Theatre:</strong> ${reservation.theatreName}</p>
+                        <p class="card-text"><strong>Showtime:</strong> ${new Date(reservation.showtime).toLocaleString()}</p>
+                        <p class="card-text"><strong>Seats:</strong> ${reservation.seats.join(', ')}</p>
+                    </div>
+                </div>
             `;
-            reservationsList.appendChild(reservationItem);
-        });
+                reservationsList.appendChild(reservationItem);
+            });
+        } catch (error) {
+            console.error('Error loading reservations:', error);
+        }
+    }
+
+    // Load Users
+    async function loadUsers() {
+        try {
+            const response = await fetch('http://localhost:3000/api/users');
+            const users = await response.json();
+            const usersList = document.getElementById('users-list');
+            usersList.innerHTML = '';
+
+            users.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.classList.add('col-md-4', 'mb-4');
+                userItem.innerHTML = `
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <p class="card-text"><strong>Email:</strong> ${user.email}</p>
+                            <p class="card-text"><strong>Role:</strong> ${user.role}</p>
+                            <button data-id="${user._id}" class="btn btn-primary btn-sm edit-role">Edit Role</button>
+                            <button data-id="${user._id}" class="btn btn-danger btn-sm delete-user">Delete</button>
+                        </div>
+                    </div>
+                `;
+                usersList.appendChild(userItem);
+            });
+
+            document.querySelectorAll('.edit-role').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const userId = e.target.getAttribute('data-id');
+                    const newRole = prompt('Enter new role (e.g., admin, user):');
+                    if (newRole) {
+                        const response = await fetch(`http://localhost:3000/api/users/${userId}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ role: newRole })
+                        });
+                        if (response.ok) {
+                            loadUsers();
+                        } else {
+                            alert('Failed to update user role.');
+                        }
+                    }
+                });
+            });
+
+            document.querySelectorAll('.delete-user').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    const userId = e.target.getAttribute('data-id');
+                    const response = await fetch(`http://localhost:3000/api/users/${userId}`, {
+                        method: 'DELETE'
+                    });
+                    if (response.ok) {
+                        loadUsers();
+                    } else {
+                        alert('Failed to delete user.');
+                    }
+                });
+            });
+        } catch (error) {
+            console.error('Error loading users:', error);
+        }
     }
 });
