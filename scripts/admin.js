@@ -105,21 +105,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
         movies.forEach(movie => {
             const movieItem = document.createElement('div');
-            movieItem.classList.add('movie-item');
+            movieItem.classList.add('col-md-4', 'mb-4');
             movieItem.innerHTML = `
-            <h3>${movie.title}</h3>
-            <img src="${movie.poster}" alt="${movie.title}" style="max-width: 200px; max-height: 300px;">
-            <p><strong>Description:</strong> ${movie.description}</p>
-            <p><strong>Language:</strong> ${movie.language}</p>
-            <p><strong>Genre:</strong> ${movie.genre}</p>
-            <p><strong>Director:</strong> ${movie.director}</p>
-            <p><strong>Duration:</strong> ${movie.duration} min</p>
-            <p><strong>Start Date:</strong> ${new Date(movie.startDate).toLocaleDateString()}</p>
-            <p><strong>End Date:</strong> ${new Date(movie.endDate).toLocaleDateString()}</p>
-            <p><strong>Trailer:</strong> <a href="${movie.trailer}" target="_blank">Watch Trailer</a></p>
-            <button data-id="${movie._id}" class="delete-movie">Delete</button>
-        `;
+                <div class="card shadow-sm">
+                    <img src="${movie.cover}" class="card-img-top" alt="${movie.title}" style="max-height: 300px;">
+                    <div class="card-body">
+                        <h5 class="card-title">${movie.title}</h5>
+                        <div class="description-container">
+                            <p class="card-text short-description">${movie.description.substring(0, 100)}...</p>
+                            <p class="card-text full-description d-none">${movie.description}</p>
+                            <a href="#" class="btn btn-link show-more">Show More</a>
+                        </div>
+                        <p class="card-text"><strong>Language:</strong> ${movie.language}</p>
+                        <p class="card-text"><strong>Genre:</strong> ${movie.genre}</p>
+                        <p class="card-text"><strong>Director:</strong> ${movie.director}</p>
+                        <p class="card-text"><strong>Duration:</strong> ${movie.duration} min</p>
+                        <p class="card-text"><strong>Start Date:</strong> ${new Date(movie.startDate).toLocaleDateString()}</p>
+                        <p class="card-text"><strong>End Date:</strong> ${new Date(movie.endDate).toLocaleDateString()}</p>
+                        <p class="card-text"><strong>Trailer:</strong> <a href="${movie.trailer}" target="_blank">Watch Trailer</a></p>
+                        <button data-id="${movie._id}" class="btn btn-danger btn-sm">Delete</button>
+                    </div>
+                </div>
+            `;
             moviesList.appendChild(movieItem);
+        });
+    
+        document.addEventListener('click', function(event) {
+            if (event.target && event.target.matches('.show-more')) {
+                event.preventDefault();
+                const container = event.target.closest('.description-container');
+                const shortDesc = container.querySelector('.short-description');
+                const fullDesc = container.querySelector('.full-description');
+        
+                if (event.target.textContent === 'Show More') {
+                    shortDesc.classList.add('d-none');
+                    fullDesc.classList.remove('d-none');
+                    event.target.textContent = 'Show Less';
+                } else {
+                    shortDesc.classList.remove('d-none');
+                    fullDesc.classList.add('d-none');
+                    event.target.textContent = 'Show More';
+                }
+            }
         });
 
         document.querySelectorAll('.delete-movie').forEach(button => {
