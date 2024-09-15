@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const homeBtn = document.getElementById('home');
+    const movieList = document.getElementById('movies-container');
     const manageMoviesBtn = document.getElementById('manage-movies');
     const manageTheatresBtn = document.getElementById('manage-theatres');
     const manageShowtimesBtn = document.getElementById('manage-showtimes');
@@ -23,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         hideAllSections();
         moviesSection.style.display = 'block';
         heading.style.display = 'none';
+        movieList.style.display = 'none';
         loadMovies();
     });
 
@@ -30,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         hideAllSections();
         theatresSection.style.display = 'block';
         heading.style.display = 'none';
+        movieList.style.display = 'none';
         loadTheatres();
     });
 
@@ -37,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         hideAllSections();
         showtimesSection.style.display = 'block';
         heading.style.display = 'none';
+        movieList.style.display = 'none';
         loadShowtimes();
     });
 
@@ -44,12 +48,14 @@ document.addEventListener('DOMContentLoaded', () => {
         hideAllSections();
         reservationsSection.style.display = 'block';
         heading.style.display = 'none';
+        movieList.style.display = 'none';
         loadReservations();
     });
 
     homeBtn.addEventListener('click', () => {
         hideAllSections();
         heading.style.display = 'block';
+        movieList.style.display = 'flex';
     });
 
     // Add Movie
@@ -169,6 +175,33 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // Load Simplified Movies for Display Section
+    async function loadSimplifiedMovies() {
+        try {
+            const response = await fetch('http://localhost:3000/api/movies');
+            const movies = await response.json();
+            const moviesContainer = document.getElementById('movies-container');
+            moviesContainer.innerHTML = ''; // Clear previous content
+
+            movies.forEach(movie => {
+                const movieItem = document.createElement('div');
+                movieItem.classList.add('col-md-4', 'mb-4');
+                movieItem.innerHTML = `
+                <div class="card shadow-sm">
+                    <img src="${movie.cover}" class="card-img-top" alt="${movie.title}" style="max-height: 300px;">
+                    <div class="card-body">
+                        <h5 class="card-title">${movie.title}</h5>
+                    </div>
+                </div>
+            `;
+                moviesContainer.appendChild(movieItem);
+            });
+        } catch (error) {
+            console.error('Error loading simplified movies:', error);
+        }
+    }
+    loadSimplifiedMovies();
 
     // Add Theatre
     document.getElementById('theatre-form').addEventListener('submit', async (e) => {
