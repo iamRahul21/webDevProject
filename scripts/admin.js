@@ -21,24 +21,28 @@ document.addEventListener('DOMContentLoaded', () => {
     manageMoviesBtn.addEventListener('click', () => {
         hideAllSections();
         moviesSection.style.display = 'block';
+        heading.style.display = 'none';
         loadMovies();
     });
 
     manageTheatresBtn.addEventListener('click', () => {
         hideAllSections();
         theatresSection.style.display = 'block';
+        heading.style.display = 'none';
         loadTheatres();
     });
 
     manageShowtimesBtn.addEventListener('click', () => {
         hideAllSections();
         showtimesSection.style.display = 'block';
+        heading.style.display = 'none';
         loadShowtimes();
     });
 
     manageReservationsBtn.addEventListener('click', () => {
         hideAllSections();
         reservationsSection.style.display = 'block';
+        heading.style.display = 'none';
         loadReservations();
     });
 

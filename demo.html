@@ -86,27 +86,63 @@
 
         <!-- main content -->
         <main class="p-4 min-vh-100">
-            <div class="jumbotron jumbotron-fluid rounded bg-white border-0 shadow-sm border-left px-4">
+            <div class="jumbotron jumbotron-fluid rounded bg-white border-0 shadow-sm border-left px-4" style="padding-top: 5px;">
                 <div class="container">
-                    <h1 class="display-4 mb-2 text-primary">Movies</h1>
+                    <h1 class="display-4 mb-2 text-primary" id="heading">Movies</h1>
                     <section id="movies-section" class="admin-section">
-                        <h2>Movies</h2>
-                        <form id="movie-form">
-                            <input type="text" id="movie-title" placeholder="Movie Title" required>
-                            <input type="url" id="movie-poster" placeholder="Poster URL" required>
-                            <input type="url" id="movie-cover" placeholder="Cover URL" required>
-                            <input type="text" id="movie-language" placeholder="Language" required>
-                            <input type="text" id="movie-genre" placeholder="Genre" required>
-                            <input type="text" id="movie-director" placeholder="Director" required>
-                            <input type="url" id="movie-trailer" placeholder="Trailer URL" required>
-                            <input type="text" id="movie-description" placeholder="Description" required>
-                            <input type="text" id="movie-duration" placeholder="Duration (e.g., 120 min)" required>
-                            <input type="date" id="movie-start-date" placeholder="Start Date" required>
-                            <input type="date" id="movie-end-date" placeholder="End Date" required>
-                            <button type="submit">Add Movie</button>
+                        <h2 class="display-4 mb-2 text-primary">Add Movies</h2>
+                        <form id="movie-form" class="p-3 bg-light shadow-sm rounded">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" id="movie-title" placeholder="Movie Title" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="url" class="form-control" id="movie-poster" placeholder="Poster URL" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <input type="url" class="form-control" id="movie-cover" placeholder="Cover URL" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" id="movie-language" placeholder="Language" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" id="movie-genre" placeholder="Genre" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" id="movie-director" placeholder="Director" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <input type="url" class="form-control" id="movie-trailer" placeholder="Trailer URL" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <textarea class="form-control" id="movie-description" rows="2" placeholder="Movie Description" required></textarea>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <input type="text" class="form-control" id="movie-duration" placeholder="Duration (e.g., 120 min)" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <input type="date" class="form-control" id="movie-start-date" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <input type="date" class="form-control" id="movie-end-date" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Add Movie</button>
                         </form>
-                        <div id="movies-list"></div>
+                        <h1 class="display-4 mb-2 text-primary">List of Movies</h1>
+                        <div id="movies-list" class="mt-4"></div>
                     </section>
+                    
 
                     <section id="theatres-section" class="admin-section">
                         <h2>Theatres</h2>
