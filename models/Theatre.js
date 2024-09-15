@@ -1,5 +1,4 @@
-// models/Theatre.js
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const theatreSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -8,4 +7,6 @@ const theatreSchema = new mongoose.Schema({
     seats: { type: Number, required: true }
 });
 
-module.exports = mongoose.model('Theatre', theatreSchema);
+const Theatre = mongoose.model('Theatre', theatreSchema);
+
+export default Theatre;

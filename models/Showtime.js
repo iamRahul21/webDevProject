@@ -1,5 +1,4 @@
-// models/Showtime.js
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const showtimeSchema = new mongoose.Schema({
     movie: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie' },
@@ -7,4 +6,6 @@ const showtimeSchema = new mongoose.Schema({
     time: Date
 });
 
-module.exports = mongoose.model('Showtime', showtimeSchema);
+const Showtime = mongoose.model('Showtime', showtimeSchema);
+
+export default Showtime;

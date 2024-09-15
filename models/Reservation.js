@@ -1,5 +1,4 @@
-// models/Reservation.js
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const reservationSchema = new mongoose.Schema({
     movie: { type: mongoose.Schema.Types.ObjectId, ref: 'Movie' },
@@ -9,4 +8,6 @@ const reservationSchema = new mongoose.Schema({
     seats: [String]
 });
 
-module.exports = mongoose.model('Reservation', reservationSchema);
+const Reservation = mongoose.model('Reservation', reservationSchema);
+
+export default Reservation;

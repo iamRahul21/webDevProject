@@ -1,16 +1,24 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const path = require('path');
-require('dotenv').config();
+import express from 'express';
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
 
-const Movie = require('./models/Movie');
-const Theatre = require('./models/Theatre');
-const Showtime = require('./models/Showtime');
-const Reservation = require('./models/Reservation');
-const User = require('./models/User');
+// Import models
+import Movie from './models/Movie.js';
+import Theatre from './models/Theatre.js';
+import Showtime from './models/Showtime.js';
+import Reservation from './models/Reservation.js';
+import User from './models/User.js';
+
+// Initialize dotenv
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,7 +27,6 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(express.static(path.join(__dirname, 'screens')));
 app.use(express.static(path.join(__dirname, 'styles')));
 app.use(express.static(path.join(__dirname, 'scripts')));
@@ -29,9 +36,9 @@ app.get('/', (req, res) => {
 });
 
 mongoose.connect(process.env.MONGODB_URI, {
-    // useNewUrlParser: true,
-    // useUnifiedTopology: true
-});
+  // useNewUrlParser: true,
+  // useUnifiedTopology: true
+})
 
 // Endpoint for regular sign-up
 app.post('/api/signup', async (req, res) => {
