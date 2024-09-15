@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p class="card-text"><strong>Start Date:</strong> ${new Date(movie.startDate).toLocaleDateString()}</p>
                         <p class="card-text"><strong>End Date:</strong> ${new Date(movie.endDate).toLocaleDateString()}</p>
                         <p class="card-text"><strong>Trailer:</strong> <a href="${movie.trailer}" target="_blank">Watch Trailer</a></p>
-                        <button data-id="${movie._id}" class="btn btn-danger btn-sm">Delete</button>
+                        <button data-id="${movie._id}" class="btn btn-danger btn-sm delete-movie">Delete</button>
                     </div>
                 </div>
             `;
