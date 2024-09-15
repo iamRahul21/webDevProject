@@ -18,11 +18,15 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
-// Serve static files
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(express.static(path.join(__dirname, 'screens')));
 app.use(express.static(path.join(__dirname, 'styles')));
 app.use(express.static(path.join(__dirname, 'scripts')));
-app.use(express.static('public')); //
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 mongoose.connect(process.env.MONGODB_URI, {
     // useNewUrlParser: true,
