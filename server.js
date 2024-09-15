@@ -22,6 +22,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'screens')));
 app.use(express.static(path.join(__dirname, 'styles')));
 app.use(express.static(path.join(__dirname, 'scripts')));
+app.use(express.static('public')); //
 
 mongoose.connect(process.env.MONGODB_URI, {
     // useNewUrlParser: true,
