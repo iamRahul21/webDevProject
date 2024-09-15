@@ -7,11 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const manageTheatresBtn = document.getElementById('manage-theatres');
     const manageShowtimesBtn = document.getElementById('manage-showtimes');
     const manageReservationsBtn = document.getElementById('manage-reservations');
+    const manageUsersBtn = document.getElementById('manage-users');
 
     const moviesSection = document.getElementById('movies-section');
     const theatresSection = document.getElementById('theatres-section');
     const showtimesSection = document.getElementById('showtimes-section');
     const reservationsSection = document.getElementById('reservations-section');
+    const usersSection = document.getElementById('users-section');
     const heading = document.getElementById('heading');
 
     function hideAllSections() {
@@ -19,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         theatresSection.style.display = 'none';
         showtimesSection.style.display = 'none';
         reservationsSection.style.display = 'none';
+        usersSection.style.display = 'none';
     }
 
     hideAllSections();
@@ -50,6 +53,14 @@ document.addEventListener('DOMContentLoaded', () => {
     manageReservationsBtn.addEventListener('click', () => {
         hideAllSections();
         reservationsSection.style.display = 'block';
+        heading.style.display = 'none';
+        movieList.style.display = 'none';
+        loadReservations();
+    });
+
+    manageUsersBtn.addEventListener('click', () => {
+        hideAllSections();
+        usersSection.style.display = 'block';
         heading.style.display = 'none';
         movieList.style.display = 'none';
         loadReservations();

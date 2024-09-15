@@ -48,6 +48,10 @@
                     <span class="bi bi-bookmark-check"></span>
                     <span class="ml-2" id="manage-reservations">Manage Reservations</span>
                 </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
+                    <span class="bi bi-people-fill"></span>
+                    <span class="ml-2" id="manage-users">Manage Users</span>
+                </a>
             </div>
             <a href="home.html" class="list-group-item list-group-item-action border-0 d-flex align-items-center"
                 style="background-color: red;">
@@ -56,7 +60,6 @@
             </a>
         </div>
     </div>
-
 
     <div class="col-md-9 col-lg-10 ml-md-auto px-0 ms-md-auto">
         <!-- top nav -->
@@ -105,7 +108,8 @@
                         <form id="movie-form" class="p-3 bg-light shadow-sm rounded">
                             <div class="form-row">
                                 <div class="form-group col-md-12">
-                                    <input type="text" class="form-control" id="movie-title" placeholder="Movie Title" required>
+                                    <input type="text" class="form-control" id="movie-title" placeholder="Movie Title"
+                                        required>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -121,7 +125,7 @@
                         <h1 class="display-4 mb-2 text-primary">List of Movies</h1>
                         <div id="movies-list" class="row"></div>
                     </section>
-                    
+
                     <!-- Theatre -->
                     <section id="theatres-section" class="admin-section">
                         <h2 class="mb-4">Theatres</h2>
@@ -186,6 +190,12 @@
                     <section id="reservations-section" class="admin-section">
                         <h2>Reservations</h2>
                         <div id="reservations-list"></div>
+                    </section>
+
+                    <!-- Users -->
+                    <section id="users-section" class="admin-section">
+                        <h2>Current Users</h2>
+                        <div id="users-list"></div>
                     </section>
                 </div>
             </div>
