@@ -88,6 +88,8 @@
             <div class="jumbotron jumbotron-fluid rounded bg-white border-0 shadow-sm border-left px-4" style="padding-top: 5px;">
                 <div class="container">
                     <h1 class="display-4 mb-2 text-primary" id="heading">Movies</h1>
+
+                    <!-- Movies -->
                     <section id="movies-section" class="admin-section">
                         <h2 class="display-4 mb-2 text-primary">Add Movies</h2>
                         <form id="movie-form" class="p-3 bg-light shadow-sm rounded">
@@ -142,29 +144,63 @@
                         <div id="movies-list" class="row"></div>
                     </section>
                     
+                    <!-- Theatre -->
                     <section id="theatres-section" class="admin-section">
-                        <h2>Theatres</h2>
-                        <form id="theatre-form">
-                            <input type="text" id="theatre-name" placeholder="Theatre Name" required>
-                            <input type="text" id="theatre-city" placeholder="City" required>
-                            <input type="number" id="theatre-ticket-price" placeholder="Ticket Price" required>
-                            <input type="number" id="theatre-seats" placeholder="Total Seats" required>
-                            <button type="submit">Add Theatre</button>
+                        <h2 class="mb-4">Theatres</h2>
+                        <form id="theatre-form" class="p-3 bg-light shadow-sm rounded">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" id="theatre-name" placeholder="Theatre Name" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" id="theatre-city" placeholder="City" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <input type="number" class="form-control" id="theatre-ticket-price" placeholder="Ticket Price" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="number" class="form-control" id="theatre-seats" placeholder="Total Seats" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Add Theatre</button>
                         </form>
-                        <div id="theatres-list"></div>
-                    </section>
+                        <div id="theatres-list" class="mt-4"></div>
+                    </section>                   
 
+                    <!-- Showtime -->
                     <section id="showtimes-section" class="admin-section">
-                        <h2>Showtimes</h2>
-                        <form id="showtime-form">
-                            <select id="showtime-movie" required></select>
-                            <select id="showtime-theatre" required></select>
-                            <input type="datetime-local" id="showtime-time" required>
-                            <button type="submit">Add Showtime</button>
+                        <h2 class="mb-4">Showtimes</h2>
+                        <form id="showtime-form" class="p-3 bg-light shadow-sm rounded">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="showtime-movie" class="sr-only">Movie</label>
+                                    <select id="showtime-movie" class="form-control" required>
+                                        <option value="" disabled selected>Select Movie</option>
+                                        <!-- Options will be populated dynamically -->
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="showtime-theatre" class="sr-only">Theatre</label>
+                                    <select id="showtime-theatre" class="form-control" required>
+                                        <option value="" disabled selected>Select Theatre</option>
+                                        <!-- Options will be populated dynamically -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="showtime-time" class="sr-only">Showtime</label>
+                                    <input type="datetime-local" id="showtime-time" class="form-control" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Add Showtime</button>
                         </form>
-                        <div id="showtimes-list"></div>
-                    </section>
+                        <div id="showtimes-list" class="mt-4"></div>
+                    </section>                    
 
+                    <!-- Reservations -->
                     <section id="reservations-section" class="admin-section">
                         <h2>Reservations</h2>
                         <div id="reservations-list"></div>

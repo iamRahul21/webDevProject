@@ -135,14 +135,14 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             moviesList.appendChild(movieItem);
         });
-    
-        document.addEventListener('click', function(event) {
+
+        document.addEventListener('click', function (event) {
             if (event.target && event.target.matches('.show-more')) {
                 event.preventDefault();
                 const container = event.target.closest('.description-container');
                 const shortDesc = container.querySelector('.short-description');
                 const fullDesc = container.querySelector('.full-description');
-        
+
                 if (event.target.textContent === 'Show More') {
                     shortDesc.classList.add('d-none');
                     fullDesc.classList.remove('d-none');
@@ -215,14 +215,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         theatres.forEach(theatre => {
             const theatreItem = document.createElement('div');
-            theatreItem.classList.add('theatre-item');
+            theatreItem.classList.add('theatre-item', 'p-3', 'mb-3', 'bg-white', 'shadow-sm', 'rounded');
             theatreItem.innerHTML = `
-                <h3>${theatre.name}</h3>
-                <p><strong>City:</strong> ${theatre.city}</p>
-                <p><strong>Ticket Price:</strong> ₹${theatre.ticketPrice}</p>
-                <p><strong>Seats:</strong> ${theatre.seats}</p>
-                <button data-id="${theatre._id}" class="delete-theatre">Delete</button>
-            `;
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h3 class="mb-0">${theatre.name}</h3>
+                <button data-id="${theatre._id}" class="btn btn-danger btn-sm delete-theatre">Delete</button>
+            </div>
+            <p class="mb-1"><strong>City:</strong> ${theatre.city}</p>
+            <p class="mb-1"><strong>Ticket Price:</strong> ₹${theatre.ticketPrice}</p>
+            <p class="mb-0"><strong>Seats:</strong> ${theatre.seats}</p>
+        `;
             theatresList.appendChild(theatreItem);
         });
 
