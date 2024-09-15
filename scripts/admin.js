@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const homeBtn = document.getElementById('home');
     const manageMoviesBtn = document.getElementById('manage-movies');
     const manageTheatresBtn = document.getElementById('manage-theatres');
     const manageShowtimesBtn = document.getElementById('manage-showtimes');
@@ -44,6 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
         reservationsSection.style.display = 'block';
         heading.style.display = 'none';
         loadReservations();
+    });
+
+    homeBtn.addEventListener('click', () => {
+        hideAllSections();
+        heading.style.display = 'block';
     });
 
     // Add Movie
