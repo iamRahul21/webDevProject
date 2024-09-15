@@ -87,3 +87,15 @@ a:hover{
   height: 200px;
   object-fit: cover;
 }
+
+#users-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+#users-list .card {
+  flex: 1 1 calc(33% - 1rem); /* Adjust the percentage based on how many items per row you want */
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+}

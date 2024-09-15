@@ -10,6 +10,7 @@ const Movie = require('./models/Movie');
 const Theatre = require('./models/Theatre');
 const Showtime = require('./models/Showtime');
 const Reservation = require('./models/Reservation');
+const User = require('./models/User');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,14 +27,6 @@ mongoose.connect(process.env.MONGODB_URI, {
     // useNewUrlParser: true,
     // useUnifiedTopology: true
 });
-
-const userSchema = new mongoose.Schema({
-    email: { type: String, required: true, unique: true },
-    password: { type: String },
-    role: { type: String, default: 'user' }
-});
-
-const User = mongoose.model('User', userSchema);
 
 // Endpoint for regular sign-up
 app.post('/api/signup', async (req, res) => {
@@ -62,10 +55,10 @@ app.post('/api/google-signin', async (req, res) => {
     try {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(200).send({ message: 'User already exists in MongoDB' });
+            return res.status(200).send({ message: 'User already exists in MongoDB', role: existingUser.role });
         }
 
-        const newUser = new User({ email, password: null, role: 'user' }); // Default role is 'user'
+        const newUser = new User({ email }); // Role will default to 'user'
         await newUser.save();
         res.status(201).send({ message: 'Google sign-in user saved to MongoDB!', role: newUser.role });
     } catch (err) {
@@ -84,7 +77,7 @@ app.post('/api/login', async (req, res) => {
             return res.status(404).send({ error: 'User not found' });
         }
 
-        // users with Google sign-in may not
+        // Users with Google sign-in may not have a password
         if (!user.password) {
             return res.status(400).send({ error: 'No password set for this user. Please log in with Google.' });
         }
@@ -124,11 +117,12 @@ app.post('/api/reset-password', async (req, res) => {
     }
 });
 
+// Endpoint to update password using token (assume you have a decodeTokenToGetEmail function)
 app.post('/api/update-password', async (req, res) => {
     const { token, newPassword } = req.body;
 
     try {
-        const email = decodeTokenToGetEmail(token);
+        const email = decodeTokenToGetEmail(token); // Implement this function
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
@@ -137,6 +131,74 @@ app.post('/api/update-password', async (req, res) => {
     } catch (error) {
         console.error('Error updating password in MongoDB:', error);
         res.status(500).json({ error: 'Error updating password' });
+    }
+});
+
+app.get('/api/users', async (req, res) => {
+    try {
+        const users = await User.find();
+        res.json(users);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({ error: 'Failed to fetch users' });
+    }
+});
+
+// Endpoint for editing user roles
+app.put('/api/users/:id/role', async (req, res) => {
+    const { id } = req.params;
+    const { role } = req.body;
+
+    const validRoles = ['user', 'admin'];
+    if (!role || !validRoles.includes(role)) {
+        return res.status(400).json({ error: 'Invalid role provided' });
+    }
+
+    try {
+        const updatedUser = await User.findByIdAndUpdate(id, { role }, { new: true });
+        if (!updatedUser) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        res.json(updatedUser);
+    } catch (error) {
+        console.error('Error updating user role:', error);
+        res.status(500).json({ error: 'Failed to update user role' });
+    }
+});
+
+// Update user role
+app.patch('/api/users/:id', async (req, res) => {
+    const userId = req.params.id;
+    const { role } = req.body;
+
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.role = role || user.role;
+        await user.save();
+
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Endpoint for deleting users
+app.delete('/api/users/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const deletedUser = await User.findByIdAndDelete(id);
+        if (!deletedUser) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        res.status(204).end();
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ error: 'Failed to delete user' });
     }
 });
 
