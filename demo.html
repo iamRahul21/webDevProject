@@ -26,26 +26,25 @@
 
     <!-- sidebar -->
     <div class="col-md-3 col-lg-2 px-0 position-fixed h-100 bg-white shadow-sm sidebar" id="sidebar">
-        <h1 class="bi bi-bootstrap text-primary d-flex my-4 justify-content-center"></h1>
         <div class="list-group rounded-0">
             <a href="#" class="list-group-item list-group-item-action active border-0 d-flex align-items-center">
                 <span class="bi bi-border-all"></span>
                 <span class="ml-2">Admin Dashboard</span>
             </a>
             <a href="#" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
-                <span class="bi bi-box"></span>
+                <span class="bi bi-film"></span>
                 <span class="ml-2">Manage Movies</span>
             </a>
             <a href="#" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
-                <span class="bi bi-box"></span>
+                <span class="bi bi-geo-alt"></span>
                 <span class="ml-2">Manage Theatres</span>
             </a>
             <a href="#" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
-                <span class="bi bi-box"></span>
+                <span class="bi bi-calendar3"></span>
                 <span class="ml-2">Manage Showtime</span>
             </a>
             <a href="#" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
-                <span class="bi bi-box"></span>
+                <span class="bi bi-bookmark-check"></span>
                 <span class="ml-2">Manage Reservations</span>
             </a>
         </div>
@@ -55,6 +54,12 @@
     <div class="col-md-9 col-lg-10 ml-md-auto px-0 ms-md-auto">
         <!-- top nav -->
         <nav class="w-100 d-flex px-4 py-2 mb-4 shadow-sm">
+            <div style="display: flex; align-items: center;">
+                <div style="font-size: larger; padding: 5px; font-style: italic; display: flex; align-items: center;">
+                    <span class="bi bi-camera-reels" style="margin-right: 8px;"></span>
+                    CinemaSpot
+                </div>
+            </div>
             <div style="font-size: large; padding: 5px; width: 100%; translate: 90%;">Hello Admin</div>
             <!-- close sidebar -->
             <button class="btn py-0 d-lg-none" id="open-sidebar">
@@ -67,8 +72,14 @@
                     <span class="bi bi-chevron-down ml-1 mb-2 small"></span>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right border-0 shadow-sm" aria-labelledby="logout-dropdown">
-                    <a class="dropdown-item" href="#">Logout</a>
-                    <a class="dropdown-item" href="#">Settings</a>
+                    <a class="dropdown-item" href="#">
+                        <span class="bi bi-box-arrow-left"></span>
+                        Logout
+                    </a>
+                    <a class="dropdown-item" href="#">
+                        <span class="bi bi-gear"></span>
+                        Settings
+                    </a>
                 </div>
             </div>
         </nav>
