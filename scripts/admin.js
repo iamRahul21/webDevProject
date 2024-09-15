@@ -1,3 +1,5 @@
+const apiKey = 'dda0c89a37b24d1043646098c8e9d707';
+
 document.addEventListener('DOMContentLoaded', () => {
     const homeBtn = document.getElementById('home');
     const movieList = document.getElementById('movies-container');
@@ -10,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const theatresSection = document.getElementById('theatres-section');
     const showtimesSection = document.getElementById('showtimes-section');
     const reservationsSection = document.getElementById('reservations-section');
+    const heading = document.getElementById('heading');
 
     function hideAllSections() {
         moviesSection.style.display = 'none';
@@ -63,33 +66,36 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const title = document.getElementById('movie-title').value;
-        const description = document.getElementById('movie-description').value;
-        const poster = document.getElementById('movie-poster').value;
-        const cover = document.getElementById('movie-cover').value;
-        const language = document.getElementById('movie-language').value;
-        const genre = document.getElementById('movie-genre').value;
-        const director = document.getElementById('movie-director').value;
-        const trailer = document.getElementById('movie-trailer').value;
-        const duration = document.getElementById('movie-duration').value;
         const startDate = document.getElementById('movie-start-date').value;
         const endDate = document.getElementById('movie-end-date').value;
 
-        const movieData = {
-            title,
-            description,
-            poster,
-            cover,
-            language,
-            genre,
-            director,
-            trailer,
-            duration,
-            startDate,
-            endDate
-        };
-
         try {
-            const response = await fetch('http://localhost:3000/api/movies', {
+            const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(title)}`);
+            const data = await response.json();
+
+            if (data.results.length === 0) {
+                alert('Movie not found on TMDB.');
+                return;
+            }
+
+            const movie = data.results[0];
+
+            const movieData = {
+                title: movie.title,
+                description: movie.overview,
+                poster: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+                cover: `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`,
+                language: movie.original_language,
+                genre: movie.genre_ids.join(', '),
+                director: movie.director || '', 
+                trailer: movie.trailer || '', 
+                duration: movie.duration || '', 
+                startDate,
+                endDate
+            };            
+
+            // Send movie data to the server
+            const serverResponse = await fetch('http://localhost:3000/api/movies', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -97,14 +103,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify(movieData)
             });
 
-            if (response.ok) {
-                loadMovies();
+            if (serverResponse.ok) {
+                alert('Movie added successfully!');
+                loadMovies(); // Refresh the movie list
+                document.getElementById('movie-form').reset(); // Reset form fields
             } else {
-                alert('Failed to add movie.');
+                const errorData = await serverResponse.json();
+                alert(`Error adding movie: ${errorData.message}`);
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred while adding the movie.');
+            alert('Error adding movie. Please try again.');
         }
     });
 
