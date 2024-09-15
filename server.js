@@ -307,5 +307,5 @@ app.get('/api/reservations', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}. Click: http://127.0.0.1:5500/screens/index.html`);
 });
