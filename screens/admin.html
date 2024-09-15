@@ -26,29 +26,36 @@
 
     <!-- sidebar -->
     <div class="col-md-3 col-lg-2 px-0 position-fixed h-100 bg-white shadow-sm sidebar" id="sidebar">
-        <div class="list-group rounded-0">
-            <a href="#" class="list-group-item list-group-item-action active border-0 d-flex align-items-center">
-                <span class="bi bi-border-all"></span>
-                <span class="ml-2" id="home">Home</span>
-            </a>
-            <a href="#" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
-                <span class="bi bi-film"></span>
-                <span class="ml-2" id="manage-movies">Manage Movies</span>
-            </a>
-            <a href="#" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
-                <span class="bi bi-geo-alt"></span>
-                <span class="ml-2" id="manage-theatres">Manage Theatres</span>
-            </a>
-            <a href="#" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
-                <span class="bi bi-calendar3"></span>
-                <span class="ml-2" id="manage-showtimes">Manage Showtime</span>
-            </a>
-            <a href="#" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
-                <span class="bi bi-bookmark-check"></span>
-                <span class="ml-2" id="manage-reservations">Manage Reservations</span>
-            </a>
+        <div class="list-group d-flex flex-column h-100">
+            <div class="flex-grow-1">
+                <a href="#" class="list-group-item list-group-item-action active border-0 d-flex align-items-center">
+                    <span class="bi bi-layout-text-sidebar-reverse"></span>
+                    <span id="home" style="padding-left: 4px;">Home</span>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
+                    <span class="bi bi-film"></span>
+                    <span class="ml-2" id="manage-movies">Manage Movies</span>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
+                    <span class="bi bi-geo-alt"></span>
+                    <span class="ml-2" id="manage-theatres">Manage Theatres</span>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
+                    <span class="bi bi-calendar3"></span>
+                    <span class="ml-2" id="manage-showtimes">Manage Showtime</span>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
+                    <span class="bi bi-bookmark-check"></span>
+                    <span class="ml-2" id="manage-reservations">Manage Reservations</span>
+                </a>
+            </div>
+            <a href="home.html" class="list-group-item list-group-item-action border-0 d-flex align-items-center" style="background-color: red;">
+                <span class="bi bi-house-door" style="color: white;"></span>
+                <span class="ml-2" id="back-homepage" style="font-weight: bold; color: white;">Back Homepage</span>
+            </a>            
         </div>
     </div>
+
 
     <div class="col-md-9 col-lg-10 ml-md-auto px-0 ms-md-auto">
         <!-- top nav -->
@@ -85,51 +92,61 @@
 
         <!-- main content -->
         <main class="p-4 min-vh-100">
-            <div class="jumbotron jumbotron-fluid rounded bg-white border-0 shadow-sm border-left px-4" style="padding-top: 5px;">
+            <div class="jumbotron jumbotron-fluid rounded bg-white border-0 shadow-sm border-left px-4"
+                style="padding-top: 5px;">
                 <div class="container">
                     <h1 class="display-4 mb-2 text-primary" id="heading">Movies</h1>
-
+                    <div class="list"></div>
                     <!-- Movies -->
                     <section id="movies-section" class="admin-section">
                         <h2 class="display-4 mb-2 text-primary">Add Movies</h2>
                         <form id="movie-form" class="p-3 bg-light shadow-sm rounded">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <input type="text" class="form-control" id="movie-title" placeholder="Movie Title" required>
+                                    <input type="text" class="form-control" id="movie-title" placeholder="Movie Title"
+                                        required>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <input type="url" class="form-control" id="movie-poster" placeholder="Poster URL" required>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <input type="url" class="form-control" id="movie-cover" placeholder="Cover URL" required>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <input type="text" class="form-control" id="movie-language" placeholder="Language" required>
+                                    <input type="url" class="form-control" id="movie-poster" placeholder="Poster URL"
+                                        required>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <input type="text" class="form-control" id="movie-genre" placeholder="Genre" required>
+                                    <input type="url" class="form-control" id="movie-cover" placeholder="Cover URL"
+                                        required>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <input type="text" class="form-control" id="movie-director" placeholder="Director" required>
+                                    <input type="text" class="form-control" id="movie-language" placeholder="Language"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" id="movie-genre" placeholder="Genre"
+                                        required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" id="movie-director" placeholder="Director"
+                                        required>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
-                                    <input type="url" class="form-control" id="movie-trailer" placeholder="Trailer URL" required>
+                                    <input type="url" class="form-control" id="movie-trailer" placeholder="Trailer URL"
+                                        required>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
-                                    <textarea class="form-control" id="movie-description" rows="2" placeholder="Movie Description" required></textarea>
+                                    <textarea class="form-control" id="movie-description" rows="2"
+                                        placeholder="Movie Description" required></textarea>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
-                                    <input type="text" class="form-control" id="movie-duration" placeholder="Duration (e.g., 120 min)" required>
+                                    <input type="text" class="form-control" id="movie-duration"
+                                        placeholder="Duration (e.g., 120 min)" required>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <input type="date" class="form-control" id="movie-start-date" required>
@@ -143,31 +160,35 @@
                         <h1 class="display-4 mb-2 text-primary">List of Movies</h1>
                         <div id="movies-list" class="row"></div>
                     </section>
-                    
+
                     <!-- Theatre -->
                     <section id="theatres-section" class="admin-section">
                         <h2 class="mb-4">Theatres</h2>
                         <form id="theatre-form" class="p-3 bg-light shadow-sm rounded">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <input type="text" class="form-control" id="theatre-name" placeholder="Theatre Name" required>
+                                    <input type="text" class="form-control" id="theatre-name" placeholder="Theatre Name"
+                                        required>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <input type="text" class="form-control" id="theatre-city" placeholder="City" required>
+                                    <input type="text" class="form-control" id="theatre-city" placeholder="City"
+                                        required>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <input type="number" class="form-control" id="theatre-ticket-price" placeholder="Ticket Price" required>
+                                    <input type="number" class="form-control" id="theatre-ticket-price"
+                                        placeholder="Ticket Price" required>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <input type="number" class="form-control" id="theatre-seats" placeholder="Total Seats" required>
+                                    <input type="number" class="form-control" id="theatre-seats"
+                                        placeholder="Total Seats" required>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary btn-block">Add Theatre</button>
                         </form>
                         <div id="theatres-list" class="mt-4"></div>
-                    </section>                   
+                    </section>
 
                     <!-- Showtime -->
                     <section id="showtimes-section" class="admin-section">
@@ -198,7 +219,7 @@
                             <button type="submit" class="btn btn-primary btn-block">Add Showtime</button>
                         </form>
                         <div id="showtimes-list" class="mt-4"></div>
-                    </section>                    
+                    </section>
 
                     <!-- Reservations -->
                     <section id="reservations-section" class="admin-section">
