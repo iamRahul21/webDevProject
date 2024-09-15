@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "concurrently \"nodemon\" \"node emailService.js\""
+    "dev": "concurrently \"nodemon\" \"node emailService.js\"",
+    "start": "concurrently \"node server.js\" \"node emailService.js\""
   },
   "keywords": [],
   "author": "",
