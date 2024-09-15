@@ -33,19 +33,19 @@
             </a>
             <a href="#" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
                 <span class="bi bi-film"></span>
-                <span class="ml-2">Manage Movies</span>
+                <span class="ml-2" id="manage-movies">Manage Movies</span>
             </a>
             <a href="#" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
                 <span class="bi bi-geo-alt"></span>
-                <span class="ml-2">Manage Theatres</span>
+                <span class="ml-2" id="manage-theatres">Manage Theatres</span>
             </a>
             <a href="#" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
                 <span class="bi bi-calendar3"></span>
-                <span class="ml-2">Manage Showtime</span>
+                <span class="ml-2" id="manage-showtimes">Manage Showtime</span>
             </a>
             <a href="#" class="list-group-item list-group-item-action border-0 d-flex align-items-center">
                 <span class="bi bi-bookmark-check"></span>
-                <span class="ml-2">Manage Reservations</span>
+                <span class="ml-2" id="manage-reservations">Manage Reservations</span>
             </a>
         </div>
     </div>
@@ -89,12 +89,66 @@
             <div class="jumbotron jumbotron-fluid rounded bg-white border-0 shadow-sm border-left px-4">
                 <div class="container">
                     <h1 class="display-4 mb-2 text-primary">Movies</h1>
-                    <p class="lead text-muted">Simple Admin Dashboard with Bootstrap.</p>
+                    <section id="movies-section" class="admin-section">
+                        <h2>Movies</h2>
+                        <form id="movie-form">
+                            <input type="text" id="movie-title" placeholder="Movie Title" required>
+                            <input type="url" id="movie-poster" placeholder="Poster URL" required>
+                            <input type="url" id="movie-cover" placeholder="Cover URL" required>
+                            <input type="text" id="movie-language" placeholder="Language" required>
+                            <input type="text" id="movie-genre" placeholder="Genre" required>
+                            <input type="text" id="movie-director" placeholder="Director" required>
+                            <input type="url" id="movie-trailer" placeholder="Trailer URL" required>
+                            <input type="text" id="movie-description" placeholder="Description" required>
+                            <input type="text" id="movie-duration" placeholder="Duration (e.g., 120 min)" required>
+                            <input type="date" id="movie-start-date" placeholder="Start Date" required>
+                            <input type="date" id="movie-end-date" placeholder="End Date" required>
+                            <button type="submit">Add Movie</button>
+                        </form>
+                        <div id="movies-list"></div>
+                    </section>
+
+                    <section id="theatres-section" class="admin-section">
+                        <h2>Theatres</h2>
+                        <form id="theatre-form">
+                            <input type="text" id="theatre-name" placeholder="Theatre Name" required>
+                            <input type="text" id="theatre-city" placeholder="City" required>
+                            <input type="number" id="theatre-ticket-price" placeholder="Ticket Price" required>
+                            <input type="number" id="theatre-seats" placeholder="Total Seats" required>
+                            <button type="submit">Add Theatre</button>
+                        </form>
+                        <div id="theatres-list"></div>
+                    </section>
+
+                    <section id="showtimes-section" class="admin-section">
+                        <h2>Showtimes</h2>
+                        <form id="showtime-form">
+                            <select id="showtime-movie" required></select>
+                            <select id="showtime-theatre" required></select>
+                            <input type="datetime-local" id="showtime-time" required>
+                            <button type="submit">Add Showtime</button>
+                        </form>
+                        <div id="showtimes-list"></div>
+                    </section>
+
+                    <section id="reservations-section" class="admin-section">
+                        <h2>Reservations</h2>
+                        <div id="reservations-list"></div>
+                    </section>
                 </div>
             </div>
         </main>
     </div>
     <script type="module" src="demo.js"></script>
+    <script src="/scripts/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const role = localStorage.getItem('role');
+            if (role !== 'admin') {
+                window.location.href = 'home.html';
+            }
+        });
+    </script>
 </body>
 
 </html>
