@@ -6,6 +6,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import { WebSocketServer } from 'ws';
 
 import Movie from './models/Movie.js';
 import Theatre from './models/Theatre.js';
@@ -36,7 +37,47 @@ app.get('/', (req, res) => {
 mongoose.connect(process.env.MONGODB_URI, {
     // useNewUrlParser: true,
     // useUnifiedTopology: true
-})
+});
+
+// WebSocket server setup
+const wss = new WebSocketServer({ noServer: true });
+
+// Function to broadcast messages to all connected clients
+function broadcast(message) {
+    wss.clients.forEach(client => {
+        if (client.readyState === client.OPEN) {
+            client.send(message);
+        }
+    });
+}
+
+// WebSocket connection handler
+wss.on('connection', ws => {
+    console.log('New WebSocket connection');
+
+    ws.on('message', message => {
+        console.log('Received:', message);
+    });
+
+    ws.on('close', () => {
+        console.log('WebSocket connection closed');
+    });
+
+    ws.on('error', error => {
+        console.error('WebSocket error:', error);
+    });
+});
+
+// Add WebSocket server to existing HTTP server
+const server = app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}. Click: http://127.0.0.1:5500/screens/index.html`);
+});
+
+server.on('upgrade', (request, socket, head) => {
+    wss.handleUpgrade(request, socket, head, ws => {
+        wss.emit('connection', ws, request);
+    });
+});
 
 // Endpoint for regular sign-up
 app.post('/api/signup', async (req, res) => {
@@ -68,7 +109,7 @@ app.post('/api/google-signin', async (req, res) => {
             return res.status(200).send({ message: 'User already exists in MongoDB', role: existingUser.role });
         }
 
-        const newUser = new User({ email }); // Role will default to 'user'
+        const newUser = new User({ email });
         await newUser.save();
         res.status(201).send({ message: 'Google sign-in user saved to MongoDB!', role: newUser.role });
     } catch (err) {
@@ -127,7 +168,7 @@ app.post('/api/reset-password', async (req, res) => {
     }
 });
 
-// Endpoint to update password using token (assume you have a decodeTokenToGetEmail function)
+// Endpoint to update password using token
 app.post('/api/update-password', async (req, res) => {
     const { token, newPassword } = req.body;
 
@@ -190,6 +231,8 @@ app.patch('/api/users/:id', async (req, res) => {
         user.role = role || user.role;
         await user.save();
 
+        broadcast(JSON.stringify({ type: 'userUpdate' }));
+
         res.json(user);
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
@@ -205,6 +248,7 @@ app.delete('/api/users/:id', async (req, res) => {
         if (!deletedUser) {
             return res.status(404).json({ error: 'User not found' });
         }
+        broadcast(JSON.stringify({ type: 'userDelete' }));
         res.status(204).end();
     } catch (error) {
         console.error('Error deleting user:', error);
@@ -238,6 +282,7 @@ app.post('/api/movies', async (req, res) => {
 
         await movie.save();
         res.status(201).json(movie);
+        broadcast(JSON.stringify({ type: 'movieAdd', movie }));
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Failed to add movie.' });
@@ -247,9 +292,10 @@ app.post('/api/movies', async (req, res) => {
 app.delete('/api/movies/:id', async (req, res) => {
     await Movie.findByIdAndDelete(req.params.id);
     res.status(204).end();
+    broadcast(JSON.stringify({ type: 'movieDelete', movieId: req.params.id }));
 });
 
-// Fetch a specific movie by its ID
+// Fetching Movie by its ID
 app.get('/api/movies/:id', async (req, res) => {
     try {
         const movie = await Movie.findById(req.params.id);
@@ -281,6 +327,7 @@ app.post('/api/theatres', async (req, res) => {
 
         await theatre.save();
         res.status(201).json(theatre);
+        broadcast(JSON.stringify({ type: 'theatreAdd', theatre }));
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Failed to add theatre.' });
@@ -290,6 +337,7 @@ app.post('/api/theatres', async (req, res) => {
 app.delete('/api/theatres/:id', async (req, res) => {
     await Theatre.findByIdAndDelete(req.params.id);
     res.status(204).end();
+    broadcast(JSON.stringify({ type: 'theatreDelete', theatreId: req.params.id }));
 });
 
 // Showtimes CRUD
@@ -317,6 +365,7 @@ app.post('/api/showtimes', async (req, res) => {
 
         await showtime.save();
         res.status(201).json(showtime);
+        broadcast(JSON.stringify({ type: 'showtimeAdd', showtime }));
     } catch (error) {
         console.error('Error creating showtime:', error);
         res.status(500).json({ message: 'Error creating showtime' });
@@ -327,6 +376,7 @@ app.delete('/api/showtimes/:id', async (req, res) => {
     try {
         await Showtime.findByIdAndDelete(req.params.id);
         res.status(204).end();
+        broadcast(JSON.stringify({ type: 'showtimeDelete', showtimeId: req.params.id }));
     } catch (error) {
         console.error('Error deleting showtime:', error);
         res.status(500).json({ message: 'Error deleting showtime' });
@@ -349,6 +399,7 @@ app.put('/api/showtimes/:id', async (req, res) => {
         }
 
         res.json(showtime);
+        broadcast(JSON.stringify({ type: 'showtimeUpdate', showtime }));
     } catch (error) {
         res.status(500).json({ message: 'Error updating showtime', error });
     }
@@ -383,6 +434,7 @@ app.post('/api/reservations', async (req, res) => {
 
         await reservation.save();
         res.status(201).json(reservation);
+        broadcast(JSON.stringify({ type: 'reservationAdd', reservation }));
     } catch (error) {
         console.error('Error creating reservation:', error);
         res.status(500).json({ message: 'Error creating reservation' });
@@ -393,12 +445,9 @@ app.delete('/api/reservations/:id', async (req, res) => {
     try {
         await Reservation.findByIdAndDelete(req.params.id);
         res.status(204).end();
+        broadcast(JSON.stringify({ type: 'reservationDelete', reservationId: req.params.id }));
     } catch (error) {
         console.error('Error deleting reservation:', error);
         res.status(500).json({ message: 'Error deleting reservation' });
     }
-});
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}. Click: http://127.0.0.1:5500/screens/index.html`);
 });
