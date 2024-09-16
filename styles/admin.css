@@ -95,7 +95,7 @@ a:hover{
 }
 
 #users-list .card {
-  flex: 1 1 calc(33% - 1rem); /* Adjust the percentage based on how many items per row you want */
+  flex: 1 1 calc(33% - 1rem);
   box-sizing: border-box;
   margin-bottom: 1rem;
 }

@@ -3,7 +3,6 @@ import express from 'express';
 import sgMail from '@sendgrid/mail';
 import cors from 'cors';
 
-// Initialize dotenv
 dotenv.config();
 
 const app = express();
