@@ -354,10 +354,49 @@ app.put('/api/showtimes/:id', async (req, res) => {
     }
 });
 
-// Reservations READ
+// Reservations CRUD
 app.get('/api/reservations', async (req, res) => {
-    const reservations = await Reservation.find().populate('movie').populate('theatre').populate('showtime').populate('user');
-    res.json(reservations);
+    try {
+        const reservations = await Reservation.find()
+            .populate('movie')
+            .populate('theatre')
+            .populate('showtime')
+            .populate('user');
+        res.json(reservations);
+    } catch (error) {
+        console.error('Error fetching reservations:', error);
+        res.status(500).json({ message: 'Error fetching reservations' });
+    }
+});
+
+app.post('/api/reservations', async (req, res) => {
+    try {
+        const { userId, movieId, theatreId, showtimeId, seats } = req.body;
+
+        const reservation = new Reservation({
+            user: userId,
+            movie: movieId,
+            theatre: theatreId,
+            showtime: showtimeId,
+            seats
+        });
+
+        await reservation.save();
+        res.status(201).json(reservation);
+    } catch (error) {
+        console.error('Error creating reservation:', error);
+        res.status(500).json({ message: 'Error creating reservation' });
+    }
+});
+
+app.delete('/api/reservations/:id', async (req, res) => {
+    try {
+        await Reservation.findByIdAndDelete(req.params.id);
+        res.status(204).end();
+    } catch (error) {
+        console.error('Error deleting reservation:', error);
+        res.status(500).json({ message: 'Error deleting reservation' });
+    }
 });
 
 app.listen(PORT, () => {
