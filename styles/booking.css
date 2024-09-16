@@ -204,13 +204,12 @@ h3 {
     border-radius: 10px;
     font-size: 15px;
     font-weight: bold;
-    margin-top: 100px;
+    margin-top: 50px;
     cursor: pointer;
 }
 
 #time-left {
     color: gray;
-    margin-top: 5px;
     font-size: smaller;
 }
 
@@ -323,4 +322,40 @@ select:focus {
 .close-button:hover {
     color: #f00;
     transform: scale(1.2);
+}
+
+
+
+.checkout-info {
+    color: #fff;
+    background-color: #333;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.checkout-info h4 {
+    margin: 0 0 10px;
+    font-size: 18px;
+}
+
+.seat-list {
+    margin-bottom: 15px;
+    display: flex;
+}
+
+.seat-item {
+    background-color: #444;
+    width: 42px;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.info-detail {
+    margin-bottom: 10px;
+}
+
+.info-detail strong {
+    color: #f0f0f0;
 }

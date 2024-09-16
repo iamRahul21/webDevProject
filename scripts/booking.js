@@ -61,17 +61,31 @@ document.addEventListener('DOMContentLoaded', () => {
     if (checkoutButton) {
         checkoutButton.addEventListener('click', () => {
             if (selectedDate && selectedTime && selectedSeats.size > 0) {
-                const selectedSeatsList = Array.from(selectedSeats).map(seat => `<div>${seat}</div>`).join('');
-                selectedSeatsContainer.innerHTML = `<div>Seat No.: ${selectedSeatsList}</div>
-                                                    <div>Date: ${selectedDate}</div>
-                                                    <div>Time: ${selectedTime}</div>`;
-                document.getElementById('time-left').textContent = 'Time left to purchase: 30 minutes';
+                const selectedSeatsList = Array.from(selectedSeats)
+                    .map(seat => `<div class="seat-item">${seat}</div>`)
+                    .join('');
+
+                selectedSeatsContainer.innerHTML = `
+                <div class="checkout-info">
+                    <h4>Selected Seats:</h4>
+                    <div class="seat-list">${selectedSeatsList}</div>
+                    <div class="info-detail">
+                        <strong>Date:</strong> ${selectedDate}
+                    </div>
+                    <div class="info-detail">
+                        <strong>Time:</strong> ${selectedTime}
+                    </div>
+                </div>
+            `;
+
+                document.getElementById('time-left').textContent = 'Time left to purchase: 10 minutes';
                 checkoutCard.style.display = 'flex';
             } else {
                 alert('Please select a date, time, and at least one seat.');
             }
         });
     }
+
 
     if (purchaseButton) {
         purchaseButton.addEventListener('click', () => {
@@ -107,16 +121,54 @@ document.addEventListener('DOMContentLoaded', () => {
             const totalCost = seatDetails.length * costPerSeat;
 
             const emailContent = `
-                Name: ${name}\n
-                Email: ${email}\n
-                Promo Code: ${promo}\n
-                Phone: ${phone}\n
-                Card Number: ${cardNumber}\n
-                Seats: ${seatDetails.join(', ')}\n
-                Total Cost: $${totalCost}\n
-                Date: ${selectedDate}\n
-                Time: ${selectedTime}
-            `;
+            <html>
+            <head>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        color: #333;
+                        line-height: 1.6;
+                        margin: 0;
+                        padding: 20px;
+                        background-color: #f4f4f4;
+                    }
+                    .container {
+                        max-width: 600px;
+                        margin: 0 auto;
+                        background: #fff;
+                        padding: 20px;
+                        border-radius: 8px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        color: #333;
+                    }
+                    p {
+                        margin: 10px 0;
+                    }
+                    .highlight {
+                        color: #a81c1d;
+                        font-weight: bold;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Movie Booking Confirmation</h1>
+                    <p><strong>Name:</strong> ${name}</p>
+                    <p><strong>Email:</strong> ${email}</p>
+                    <p><strong>Promo Code Applied:</strong> ${promo}</p>
+                    <p><strong>Phone:</strong> ${phone}</p>
+                    <p><strong>Card Number:</strong> ${cardNumber}</p>
+                    <p><strong>Seats:</strong> ${seatDetails.join(', ')}</p>
+                    <p><strong>Total Cost:</strong> $${totalCost}</p>
+                    <p><strong>Date:</strong> ${selectedDate} September</p>
+                    <p><strong>Time:</strong> ${selectedTime}</p>
+                    <p class="highlight">Thank you for your booking!</p>
+                </div>
+            </body>
+            </html>
+        `;
 
             // Send email via server
             try {
