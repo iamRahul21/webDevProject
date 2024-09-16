@@ -1,36 +1,49 @@
 document.addEventListener('DOMContentLoaded', () => {
+    let selectedDate = null;
+    let selectedTime = null;
+    const selectedSeats = new Set();
+
     // Handle seat selection
     const seats = document.querySelectorAll('.seat');
     seats.forEach(seat => {
         seat.addEventListener('click', () => {
             if (!seat.classList.contains('booked') && !seat.classList.contains('blank')) {
                 seat.classList.toggle('selected');
+                if (seat.classList.contains('selected')) {
+                    selectedSeats.add(seat.textContent.trim());
+                } else {
+                    selectedSeats.delete(seat.textContent.trim());
+                }
             }
         });
     });
 
     // Handle date selection
-    const dates = document.querySelectorAll('#date-span');
+    const dates = document.querySelectorAll('.date-span');
     dates.forEach(date => {
         date.addEventListener('click', () => {
             if (date.classList.contains('selected')) {
                 date.classList.remove('selected');
+                selectedDate = null;
             } else {
                 dates.forEach(d => d.classList.remove('selected'));
                 date.classList.add('selected');
+                selectedDate = date.textContent.trim();
             }
         });
     });
 
     // Handle time selection
-    const times = document.querySelectorAll('#time-span');
+    const times = document.querySelectorAll('.time-span');
     times.forEach(time => {
         time.addEventListener('click', () => {
             if (time.classList.contains('selected')) {
                 time.classList.remove('selected');
+                selectedTime = null;
             } else {
                 times.forEach(t => t.classList.remove('selected'));
                 time.classList.add('selected');
+                selectedTime = time.textContent.trim();
             }
         });
     });
@@ -41,10 +54,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const purchaseButton = document.getElementById('purchase');
     const orderFormContainer = document.getElementById('orderFormContainer');
     const closeCheckoutButton = document.getElementById('closeCheckoutButton');
+    const selectedSeatsContainer = document.getElementById('selected-seats');
+    const dateElement = document.createElement('div');
+    const timeElement = document.createElement('div');
 
     if (checkoutButton) {
         checkoutButton.addEventListener('click', () => {
-            checkoutCard.style.display = 'flex';
+            if (selectedDate && selectedTime && selectedSeats.size > 0) {
+                const selectedSeatsList = Array.from(selectedSeats).map(seat => `<div>${seat}</div>`).join('');
+                selectedSeatsContainer.innerHTML = `<div>Seat No.: ${selectedSeatsList}</div>
+                                                    <div>Date: ${selectedDate}</div>
+                                                    <div>Time: ${selectedTime}</div>`;
+                document.getElementById('time-left').textContent = 'Time left to purchase: 30 minutes';
+                checkoutCard.style.display = 'flex';
+            } else {
+                alert('Please select a date, time, and at least one seat.');
+            }
         });
     }
 
@@ -70,14 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('orderForm').addEventListener('submit', async function (event) {
             event.preventDefault();
 
-            // Get selected seat details
-            const selectedSeats = document.querySelectorAll('#selected-seats .seat'); // Corrected selector
-            let seatDetails = [];
-            selectedSeats.forEach(seat => {
-                seatDetails.push(seat.textContent.trim());
-            });
+            const seatDetails = Array.from(selectedSeats);
 
-            // Get form values
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const promo = document.getElementById('promo').value;
@@ -87,10 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const costPerSeat = 12;
             const totalCost = seatDetails.length * costPerSeat;
 
-            const selectedDate = document.querySelector('#date-span.selected')?.textContent;
-            const selectedTime = document.querySelector('#time-span.selected')?.textContent;
-
-            // Email content
             const emailContent = `
                 Name: ${name}\n
                 Email: ${email}\n

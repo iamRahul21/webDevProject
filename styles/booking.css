@@ -28,7 +28,7 @@ body {
 
 }
 
-#date-span {
+.date-span {
     background-color: #323231;
     padding-left: 10px;
     padding-right: 10px;
@@ -40,7 +40,7 @@ body {
     cursor: pointer;
 }
 
-#time-span {
+.time-span {
     background-color: #323231;
     padding-left: 10px;
     padding-right: 10px;
@@ -71,8 +71,8 @@ body {
     border-radius: 50%;
 }
 
-#date-span.selected,
-#time-span.selected {
+.date-span.selected,
+.time-span.selected {
     background-color: red;
     color: white;
 }
@@ -83,16 +83,21 @@ body {
 
 .available {
     background-color: #333;
+    color: #333;
+    font-size: 0.1px;
     cursor: pointer;
     cursor: pointer;
 }
 
 .booked {
     background-color: #777;
+    color: #777;
+    font-size: 0.1px;
 }
 
 .selected {
     background-color: red;
+    color: red;
 }
 
 .legend {
@@ -141,6 +146,7 @@ body {
 /* ---------------------------------CHECKOUT CARD---------------------------------- */
 #checkout-card {
     background-color: black;
+    color: white;
     width: 350px;
     height: 400px;
     display: none;
