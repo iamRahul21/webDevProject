@@ -86,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
     if (purchaseButton) {
         purchaseButton.addEventListener('click', () => {
             orderFormContainer.style.display = 'flex';
