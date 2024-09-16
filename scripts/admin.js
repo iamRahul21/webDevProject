@@ -48,6 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
         showtimesSection.style.display = 'block';
         heading.style.display = 'none';
         movieList.style.display = 'none';
+        loadMoviesForShowtime();
+        loadTheatresForShowtime();
         loadShowtimes();
     });
 
@@ -290,16 +292,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Showtime dropdown - Movies
+    async function loadMoviesForShowtime() {
+        try {
+            const response = await fetch('http://localhost:3000/api/movies');
+            const movies = await response.json();
+            const movieSelect = document.getElementById('showtime-movie');
+            movieSelect.innerHTML = '<option value="" disabled selected>Select Movie</option>';
+
+            movies.forEach(movie => {
+                const option = document.createElement('option');
+                option.value = movie._id;
+                option.textContent = movie.title;
+                movieSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading movies for showtime:', error);
+        }
+    }
+
+    // Showtime dropdown - Theatres
+    async function loadTheatresForShowtime() {
+        try {
+            const response = await fetch('http://localhost:3000/api/theatres');
+            const theatres = await response.json();
+            const theatreSelect = document.getElementById('showtime-theatre');
+            theatreSelect.innerHTML = '<option value="" disabled selected>Select Theatre</option>';
+
+            theatres.forEach(theatre => {
+                const option = document.createElement('option');
+                option.value = theatre._id;
+                option.textContent = theatre.name;
+                theatreSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error loading theatres for showtime:', error);
+        }
+    }
+
     // Add Showtime
     document.getElementById('showtime-form').addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const movieId = document.getElementById('showtime-movie').value;
         const theatreId = document.getElementById('showtime-theatre').value;
-        const startTime = document.getElementById('showtime-time').value;
-
-        const endTime = new Date(startTime);
-        endTime.setHours(endTime.getHours() + 2); 
+        const startTime = document.getElementById('showtime-start-time').value;
+        const endTime = document.getElementById('showtime-end-time').value;
 
         try {
             const response = await fetch('http://localhost:3000/api/showtimes', {
@@ -307,7 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ movieId, theatreId, startTime, endTime: endTime.toISOString() })
+                body: JSON.stringify({ movieId, theatreId, startTime, endTime })
             });
 
             if (response.ok) {
@@ -327,28 +365,117 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load Showtimes
     async function loadShowtimes() {
         try {
-            const response = await fetch('http://localhost:3000/api/showtimes');
-            const showtimes = await response.json();
+            const [showtimeResponse, movieResponse, theatreResponse] = await Promise.all([
+                fetch('http://localhost:3000/api/showtimes'),
+                fetch('http://localhost:3000/api/movies'),
+                fetch('http://localhost:3000/api/theatres')
+            ]);
+
+            const showtimes = await showtimeResponse.json();
+            const movies = await movieResponse.json();
+            const theatres = await theatreResponse.json();
+
             const showtimesList = document.getElementById('showtimes-list');
             showtimesList.innerHTML = '';
+
+            function getMovieTitle(movieId) {
+                const movie = movies.find(movie => movie._id === movieId);
+                return movie ? movie.title : 'Unknown Movie';
+            }
+
+            function getTheatreName(theatreId) {
+                const theatre = theatres.find(theatre => theatre._id === theatreId);
+                return theatre ? theatre.name : 'Unknown Theatre';
+            }
 
             showtimes.forEach(showtime => {
                 const showtimeItem = document.createElement('div');
                 showtimeItem.classList.add('col-md-4', 'mb-4');
+
+                const movieTitle = showtime.movie ? showtime.movie.title : 'Unknown Movie';
+                const theatreName = showtime.theatre ? showtime.theatre.name : 'Unknown Theatre';
+
+                const formattedStartTime = new Date(showtime.startTime).toLocaleString();
+                const formattedEndTime = new Date(showtime.endTime).toLocaleString();
+
                 showtimeItem.innerHTML = `
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <p class="card-text"><strong>Movie:</strong> ${showtime.movieTitle}</p>
-                        <p class="card-text"><strong>Theatre:</strong> ${showtime.theatreName}</p>
-                        <p class="card-text"><strong>Start Time:</strong> ${new Date(showtime.startTime).toLocaleString()}</p>
-                        <p class="card-text"><strong>End Time:</strong> ${new Date(showtime.endTime).toLocaleString()}</p>
+                        <p class="card-text"><strong>Movie:</strong> ${movieTitle}</p>
+                        <p class="card-text"><strong>Theatre:</strong> ${theatreName}</p>
+                        <p class="card-text"><strong>Start:</strong> ${formattedStartTime}</p>
+                        <p class="card-text"><strong>End:</strong> ${formattedEndTime}</p>
+                        <button class="btn btn-primary btn-sm edit-showtime" data-id="${showtime._id}">Edit</button>
+                        <button class="btn btn-danger btn-sm delete-showtime" data-id="${showtime._id}">Delete</button>
                     </div>
                 </div>
             `;
                 showtimesList.appendChild(showtimeItem);
             });
+
+            document.querySelectorAll('.edit-showtime').forEach(button => {
+                button.addEventListener('click', editShowtime);
+            });
+            document.querySelectorAll('.delete-showtime').forEach(button => {
+                button.addEventListener('click', deleteShowtime);
+            });
+
         } catch (error) {
             console.error('Error loading showtimes:', error);
+        }
+    }
+
+    // Edit Showtime Function
+    async function editShowtime(e) {
+        const showtimeId = e.target.getAttribute('data-id');
+        const newStartTime = prompt('Enter new start time (yyyy-mm-ddThh:mm):');
+        const newEndTime = prompt('Enter new end time (yyyy-mm-ddThh:mm):');
+
+        if (newStartTime && newEndTime) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/showtimes/${showtimeId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ startTime: newStartTime, endTime: newEndTime })
+                });
+
+                if (response.ok) {
+                    alert('Showtime updated successfully!');
+                    loadShowtimes();
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error updating showtime: ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Error updating showtime:', error);
+                alert('Error updating showtime. Please try again.');
+            }
+        }
+    }
+
+    // Delete Showtime Function
+    async function deleteShowtime(e) {
+        const showtimeId = e.target.getAttribute('data-id');
+
+        if (confirm('Are you sure you want to delete this showtime?')) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/showtimes/${showtimeId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('Showtime deleted successfully!');
+                    loadShowtimes();
+                } else {
+                    const errorData = await response.json();
+                    alert(`Error deleting showtime: ${errorData.message}`);
+                }
+            } catch (error) {
+                console.error('Error deleting showtime:', error);
+                alert('Error deleting showtime. Please try again.');
+            }
         }
     }
 

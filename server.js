@@ -30,12 +30,12 @@ app.use(express.static(path.join(__dirname, 'styles')));
 app.use(express.static(path.join(__dirname, 'scripts')));
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 mongoose.connect(process.env.MONGODB_URI, {
-  // useNewUrlParser: true,
-  // useUnifiedTopology: true
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true
 })
 
 // Endpoint for regular sign-up
@@ -294,20 +294,64 @@ app.delete('/api/theatres/:id', async (req, res) => {
 
 // Showtimes CRUD
 app.get('/api/showtimes', async (req, res) => {
-    const showtimes = await Showtime.find().populate('movie').populate('theatre');
-    res.json(showtimes);
+    try {
+        const showtimes = await Showtime.find()
+            .populate('movie')
+            .populate('theatre');
+        res.json(showtimes);
+    } catch (error) {
+        console.error('Error fetching showtimes:', error);
+        res.status(500).json({ message: 'Error fetching showtimes' });
+    }
 });
 
 app.post('/api/showtimes', async (req, res) => {
-    const { movieId, theatreId, time } = req.body;
-    const showtime = new Showtime({ movie: movieId, theatre: theatreId, time });
-    await showtime.save();
-    res.status(201).json(showtime);
+    try {
+        const { movieId, theatreId, startTime, endTime } = req.body;
+        const showtime = new Showtime({
+            movie: movieId,
+            theatre: theatreId,
+            startTime,
+            endTime
+        });
+
+        await showtime.save();
+        res.status(201).json(showtime);
+    } catch (error) {
+        console.error('Error creating showtime:', error);
+        res.status(500).json({ message: 'Error creating showtime' });
+    }
 });
 
 app.delete('/api/showtimes/:id', async (req, res) => {
-    await Showtime.findByIdAndDelete(req.params.id);
-    res.status(204).end();
+    try {
+        await Showtime.findByIdAndDelete(req.params.id);
+        res.status(204).end();
+    } catch (error) {
+        console.error('Error deleting showtime:', error);
+        res.status(500).json({ message: 'Error deleting showtime' });
+    }
+});
+
+// Update Showtime
+app.put('/api/showtimes/:id', async (req, res) => {
+    const { startTime, endTime } = req.body;
+
+    try {
+        const showtime = await Showtime.findByIdAndUpdate(
+            req.params.id,
+            { startTime, endTime },
+            { new: true }
+        );
+
+        if (!showtime) {
+            return res.status(404).json({ message: 'Showtime not found' });
+        }
+
+        res.json(showtime);
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating showtime', error });
+    }
 });
 
 // Reservations READ
