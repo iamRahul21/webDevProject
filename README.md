@@ -80,6 +80,11 @@
 ### 6. Launch the Live Server
 - Navigate to `screens/index.html` in your project. Click on "Go Live" in VSCode to start the live server.
 
+## Admin Dashboard Access
+Use the following credentials to access the admin dashboard:
+- Email: testadmin@gmail.com
+- Password: ihavetheADMINaccess
+
 ## Key Technologies Used
 - Node.js & Express: Back-end framework for handling server-side logic.
 - MongoDB: Primary database for storing movies, theatres, showtimes, and reservations.
