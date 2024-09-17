@@ -25,15 +25,17 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'screens')));
 app.use(express.static(path.join(__dirname, 'styles')));
 app.use(express.static(path.join(__dirname, 'scripts')));
+app.use(express.static(path.join(__dirname, 'screens')));
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'screens', 'index.html'));
 });
 
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'screens', 'index.html'));
+});
 mongoose.connect(process.env.MONGODB_URI, {
     // useNewUrlParser: true,
     // useUnifiedTopology: true
